@@ -1,6 +1,9 @@
 # news_app_api
 
-A new Flutter project.
+Flutter News app made using clean architecture with bloc pattern.
+It follows the clean architecture from reso coder and how to manage the code more like a pro.
+It uses newsapi.org for fetching news article and API key. 
+Hope this will help other to who want to do projects using clean architecture.
 
 ## Getting Started
 
