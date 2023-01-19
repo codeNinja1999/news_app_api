@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:news_app_api/core/config/app_config.dart';
-import 'package:news_app_api/core/config/news_category/news_category.dart';
+import 'package:news_app_api/core/config/news_category/news_category_url.dart';
 import 'package:news_app_api/core/error/exception.dart';
 import 'package:news_app_api/core/error/failure.dart';
 import 'package:news_app_api/src/news_app/data/models/article_model.dart';
@@ -22,7 +22,7 @@ class NewsArticleRemoteDatasourceImpl implements NewsArticleRemoteDatasource {
     try {
       List<Article?> articles = [];
 
-      const String url = AppConfig.baseUrl + NewsCategory.appleUrl + AppConfig.apiKey;
+      const String url = AppConfig.baseUrl + NewsCategoryUrl.appleUrl + AppConfig.apiKey;
       final response = await client.get(
         Uri.parse(url),
       );

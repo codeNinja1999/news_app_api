@@ -6,7 +6,7 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 class PageIndicatorWidget extends StatelessWidget {
   final PageController pageController;
 
-  const PageIndicatorWidget({required this.pageController});
+  const PageIndicatorWidget({super.key, required this.pageController});
 
   @override
   Widget build(BuildContext context) {

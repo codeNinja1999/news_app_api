@@ -2,12 +2,12 @@
 
 import 'package:flutter/Material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:news_app_api/core/config/app_config.dart';
 import 'package:news_app_api/core/config/helpers/news_category_helper.dart';
 import 'package:news_app_api/src/news_app/presentation/pages/home_page/bloc/news_bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class NewsCategoryWidget extends StatelessWidget {
-  NewsCategoryWidget({super.key});
+  const NewsCategoryWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +70,7 @@ class BuildCategoryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: 60,
       width: 120,
       child: Stack(
@@ -82,13 +82,11 @@ class BuildCategoryCard extends StatelessWidget {
                 DecorationImage(image: AssetImage(imageUrl), fit: BoxFit.cover),
           )),
           InkWell(
-            onTap: () async {
+            onTap: () {
               context.read<NewsBlocBloc>().add(
                     SelectNewsCategoryEvent(newsCategory: categoryUrl),
                   );
-
-              final pref = await SharedPreferences.getInstance();
-              pref.setString('category', categoryUrl);
+              UrlPreferences.setNewsUrl(categoryUrl);  
             },
             child: Center(
               child: Text(

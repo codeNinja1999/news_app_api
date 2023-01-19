@@ -28,7 +28,7 @@ class NewsArticleRepositoryImpl implements NewsArticleRepository {
           return Right(articleList);
         }
       } catch (e) {
-        throw Exception(e);
+        throw UnknownFailure(e);
       }
     } else {
       return Left(NetworkDisconnected('No internet Connection'));

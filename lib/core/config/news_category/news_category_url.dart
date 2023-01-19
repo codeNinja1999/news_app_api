@@ -1,4 +1,4 @@
-class NewsCategory {
+class NewsCategoryUrl {
   static const String appleUrl =
       'everything?q=apple&from=2023-01-16&to=2023-01-16&sortBy=popularity&apiKey=';
 

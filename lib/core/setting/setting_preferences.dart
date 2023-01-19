@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class SettingPreferences {
   static SharedPreferences? sharedPreferences;
   static String HOME_KEY = 'Show_Home';
+  
 
   static init() async {
     sharedPreferences = await SharedPreferences.getInstance();

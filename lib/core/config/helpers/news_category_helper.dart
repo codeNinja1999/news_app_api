@@ -1,26 +1,23 @@
-import 'package:news_app_api/core/config/news_category/news_category.dart';
+import 'package:news_app_api/core/config/news_category/news_category_url.dart';
 
 class NewsCategoryHelper {
-
   String apple() {
-    return NewsCategory.appleUrl;
+    return NewsCategoryUrl.appleUrl;
   }
 
   String tesla() {
-    return NewsCategory.teslaUrl;
+    return NewsCategoryUrl.teslaUrl;
   }
 
   String usHeadline() {
-    return NewsCategory.usHeadlineUrl;
+    return NewsCategoryUrl.usHeadlineUrl;
   }
 
   String techCrunchHeadline() {
-    return NewsCategory.techCrunchHeadlineUrl;
+    return NewsCategoryUrl.techCrunchHeadlineUrl;
   }
 
-String wallStreetHeadline() {
-    return NewsCategory.wallStreetJournalUrl;
+  String wallStreetHeadline() {
+    return NewsCategoryUrl.wallStreetJournalUrl;
   }
-
-  
 }
