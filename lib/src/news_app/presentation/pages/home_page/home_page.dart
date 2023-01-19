@@ -1,10 +1,13 @@
-// ignore_for_file: prefer_const_constructors, use_build_context_synchronously
+// ignore_for_file: prefer_const_constructors, use_build_context_synchronously, prefer_interpolation_to_compose_strings
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:news_app_api/core/config/helpers/news_category_helper.dart';
+import 'package:news_app_api/core/theme/app_theme/app_theme.dart';
+import 'package:news_app_api/core/theme/bloc/bloc.dart';
+import 'package:news_app_api/core/theme/preference/preferences.dart';
 import 'package:news_app_api/src/news_app/domain/entity/news_article.dart';
 import 'package:news_app_api/src/news_app/presentation/pages/details_news_article/details_news_article.dart';
 import 'package:news_app_api/src/news_app/presentation/pages/home_page/bloc/news_bloc.dart';
@@ -13,7 +16,9 @@ import 'package:news_app_api/src/news_app/presentation/widgets/news_category_wid
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  const HomePage({
+    super.key,
+  });
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -22,12 +27,23 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   void initState() {
-    Center(
-      child: CircularProgressIndicator(),
-    );
     context.read<NewsBlocBloc>().add(ShowFetchedData());
-
+    _loadTheme();
     super.initState();
+  }
+
+  bool light = (Preferences.getTheme() == AppTheme.light) ? false : true;
+
+  _loadTheme() async {
+    context.read<ThemeBloc>().add(ThemeChanged(theme: Preferences.getTheme()));
+  }
+
+  _setTheme(bool lightTheme) {
+    AppTheme selectedTheme = lightTheme ? AppTheme.dark : AppTheme.light;
+
+    context.read<ThemeBloc>().add(ThemeChanged(theme: selectedTheme));
+
+    Preferences.setTheme(selectedTheme);
   }
 
   void clearcache() {
@@ -39,15 +55,27 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         actions: [
+          Switch(
+            value: light,
+            onChanged: (value) {
+              _setTheme(value);
+
+              setState(() {
+                light = value;
+              });
+            },
+          ),
           IconButton(
               onPressed: () async {
                 final pref = await SharedPreferences.getInstance();
-                pref.setBool('showHome', false);
+                pref.setBool('SHOWHOME', false);
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
@@ -62,7 +90,7 @@ class _HomePageState extends State<HomePage> {
         ],
         title: Text(
           'News App',
-          style: TextStyle(color: Colors.black),
+          style: theme.textTheme.headlineSmall,
         ),
       ),
       body: SafeArea(
@@ -70,36 +98,34 @@ class _HomePageState extends State<HomePage> {
           children: [
             NewsCategoryWidget(),
             SizedBox(height: 10),
-            Container(
-              child: BlocBuilder<NewsBlocBloc, NewsBlocState>(
-                builder: (context, state) {
-                  if (state is Loading) {
-                    return Center(child: CircularProgressIndicator());
-                  } else if (state is Loaded) {
-                    List<NewsArticle?> articles = state.newsArticle;
+            BlocBuilder<NewsBlocBloc, NewsBlocState>(
+              builder: (context, state) {
+                if (state is Loading) {
+                  return Center(child: CircularProgressIndicator());
+                } else if (state is Loaded) {
+                  List<NewsArticle?> articles = state.newsArticle;
 
-                    return Expanded(
-                      child: RefreshIndicator(
-                          child: BuildNews(
-                            articles: articles,
-                          ),
-                          onRefresh: () async {
-                            clearcache();
-                            final pref = await SharedPreferences.getInstance();
-                            final String? category = pref.getString('category');
+                  return Expanded(
+                    child: RefreshIndicator(
+                        child: BuildNews(
+                          articles: articles,
+                        ),
+                        onRefresh: () async {
+                          clearcache();
+                          final pref = await SharedPreferences.getInstance();
+                          final String? category = pref.getString('category');
 
-                            context.read<NewsBlocBloc>().add(
-                                SelectNewsCategoryEvent(
-                                    newsCategory: category ??
-                                        NewsCategoryHelper().apple()));
-                          }),
-                    );
-                  } else if (state is Error) {
-                    return Center(child: Text(state.message));
-                  }
-                  return Center(child: Text('No state is loaded'));
-                },
-              ),
+                          context.read<NewsBlocBloc>().add(
+                              SelectNewsCategoryEvent(
+                                  newsCategory: category ??
+                                      NewsCategoryHelper().apple()));
+                        }),
+                  );
+                } else if (state is Error) {
+                  return Center(child: Text(state.message));
+                }
+                return Center(child: Text('No state is loaded'));
+              },
             ),
           ],
         ),
@@ -117,7 +143,7 @@ class BuildNews extends StatelessWidget {
     Config(
       'customCacheKey',
       stalePeriod: Duration(hours: 1),
-      maxNrOfCacheObjects: 20,
+      maxNrOfCacheObjects: 100,
     ),
   );
 

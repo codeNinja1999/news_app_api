@@ -40,8 +40,11 @@ class NewsArticleRepositoryImpl implements NewsArticleRepository {
       String category) async {
     if (await networkInfo.isConnected) {
       try {
+
+        
         final article = await newsArticleConcreteDatasource
             .getNewsConcreteArticle(category);
+
         return Right(article);
       } on ServerException {
         throw Left(ServerFailure('Failed to load data from API'));

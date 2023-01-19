@@ -28,14 +28,9 @@ class EmptyList extends Failure {
 }
 
 class UnknownFailure extends Failure {
-  final String message;
-  UnknownFailure(this.message);
 
   @override
-  String toString() => message;
-
-  @override
-  List<Object?> get props => [message];
+  List<Object?> get props => [];
 }
 
 

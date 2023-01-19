@@ -12,20 +12,18 @@ class DetailsNewsArticle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(article.source == null
-            ? article.url.toString()
-            : article.author.toString()),
+        title: Text(article.author.toString()),
       ),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
+              width: double.infinity,
               height: 300,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(10)),
-                color: Colors.green,
                 image: DecorationImage(
+                  alignment: Alignment.topCenter,
                   image: CachedNetworkImageProvider(
                     article.urlToImage ??
                         'https://propertywiselaunceston.com.au/wp-content/themes/property-wise/images/no-image.png',
@@ -39,18 +37,8 @@ class DetailsNewsArticle extends StatelessWidget {
 
                     Text(stackTrace.toString());
                   },
-                  fit: BoxFit.cover,
                 ),
               ),
-              width: double.infinity,
-              // child: CachedNetworkImage(
-              //   imageUrl: article.urlToImage ??
-              //       'https://propertywiselaunceston.com.au/wp-content/themes/property-wise/images/no-image.png',
-              //   placeholder: (context, url) =>
-              //       Center(child: CircularProgressIndicator()),
-              //   errorWidget: (context, url, error) =>
-              //       Image.asset('assets/images/image_5.jpg'),
-              // ),
             ),
             SizedBox(
               height: 10,

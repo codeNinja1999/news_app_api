@@ -2,6 +2,7 @@ import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:news_app_api/core/network/network_info.dart';
+import 'package:news_app_api/core/theme/bloc/theme_bloc.dart';
 import 'package:news_app_api/src/news_app/data/data_source/news_article_concrete_datasource.dart';
 import 'package:news_app_api/src/news_app/data/data_source/news_article_remote_datasource.dart';
 import 'package:news_app_api/src/news_app/data/repositories/news_article_repository_impl.dart';
@@ -16,6 +17,10 @@ GetIt sl = GetIt.instance;
 void init() async {
   sl.registerFactory(
     () => NewsBlocBloc(getNewsArticle: sl(), getNewsConcreteArticle: sl()),
+  );
+
+  sl.registerFactory(
+    () => ThemeBloc(),
   );
 
   //usecases

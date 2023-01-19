@@ -2,7 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:news_app_api/core/theme_config/app_theme.dart';
+import 'package:news_app_api/core/theme/bloc/bloc.dart';
+import 'package:news_app_api/core/theme/preference/preferences.dart';
 import 'package:news_app_api/src/news_app/presentation/pages/home_page/bloc/news_bloc.dart';
 import 'package:news_app_api/src/news_app/presentation/pages/home_page/home_page.dart';
 import 'package:news_app_api/src/news_app/presentation/pages/onboarding_page/onboarding_screen.dart';
@@ -14,13 +15,29 @@ import 'dependency_injection.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   di.init();
+  await Preferences.init();
   final pref = await SharedPreferences.getInstance();
-  final showHome = pref.getBool('showHome') ?? false;
-  runApp(MyApp(showHome: showHome));
+  final showHome = pref.getBool('SHOWHOME') ?? false;
+
+  runApp(
+    MultiBlocProvider(
+      providers: [
+        BlocProvider<NewsBlocBloc>(
+          create: (BuildContext context) => sl<NewsBlocBloc>(),
+        ),
+        BlocProvider<ThemeBloc>(
+          create: (BuildContext context) => sl<ThemeBloc>(),
+        ),
+      ],
+      child: MyApp(
+        showHome: showHome,
+      ),
+    ),
+  );
 }
 
 class MyApp extends StatefulWidget {
-  MyApp({super.key, required this.showHome});
+  const MyApp({super.key, required this.showHome});
 
   final bool showHome;
 
@@ -31,13 +48,14 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => sl<NewsBlocBloc>(),
-      child: MaterialApp(
-      
-        debugShowCheckedModeBanner: false,
-        home: widget.showHome ? HomePage() : OnBoardingScreen(),
-      ),
+    return BlocBuilder<ThemeBloc, ThemeState>(
+      builder: (context, state) {
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          theme: state.themeData,
+          home: widget.showHome ? HomePage() : OnBoardingScreen(),
+        );
+      },
     );
   }
 }

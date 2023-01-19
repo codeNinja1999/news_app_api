@@ -16,7 +16,7 @@ class GetStartedButtonWidget extends StatelessWidget {
       child: TextButton(
         onPressed: () async {
           final pref = await SharedPreferences.getInstance();
-          pref.setBool('showHome', true);
+          pref.setBool('SHOWHOME', true);
 
           Navigator.pushReplacement(
             context,
