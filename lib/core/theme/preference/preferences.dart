@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 import 'package:news_app_api/core/theme/app_theme/app_theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';

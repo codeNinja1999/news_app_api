@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:news_app_api/core/setting/setting_preferences.dart';
 import 'package:news_app_api/core/theme/bloc/bloc.dart';
 import 'package:news_app_api/core/theme/preference/preferences.dart';
 import 'package:news_app_api/src/news_app/presentation/pages/home_page/bloc/news_bloc.dart';
@@ -16,8 +17,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   di.init();
   await Preferences.init();
-  final pref = await SharedPreferences.getInstance();
-  final showHome = pref.getBool('SHOWHOME') ?? false;
+  await SettingPreferences.init();
 
   runApp(
     MultiBlocProvider(
@@ -30,16 +30,15 @@ void main() async {
         ),
       ],
       child: MyApp(
-        showHome: showHome,
+
       ),
     ),
   );
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({super.key, required this.showHome});
+  const MyApp({super.key});
 
-  final bool showHome;
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -53,7 +52,7 @@ class _MyAppState extends State<MyApp> {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
           theme: state.themeData,
-          home: widget.showHome ? HomePage() : OnBoardingScreen(),
+          home: SettingPreferences.getHomeKey() ? HomePage() : OnBoardingScreen(),
         );
       },
     );
